@@ -50,3 +50,40 @@ union
 select concat('There are a total of ',count(*),' ', lower(occupation),'s.') as occupation_count 
 from occupations 
 group by occupation order by modify_name
+
+-- PIVOT TABLES
+drop table if exists orders;
+CREATE TABLE orders(order_id integer,date date,cust_id integer,amount integer); 
+
+INSERT INTO orders(order_id,date,cust_id,amount) 
+ VALUES 
+(1,'2021-08-28',1,4922),
+(2,'2020-08-05',2,7116),
+(3,'2022-08-04',3,1206),
+(4,'2022-08-20',1,2841),
+(5,'2022-08-20',2,2522),
+(6,'2022-08-21',3,5084),
+(7,'2022-08-20',1,6680),
+(8,'2022-08-02',2,8123),
+(9,'2020-08-02',3,6015),
+(10,'2022-08-01',2,4092),
+(11,'2022-08-02',1,7224),
+(12,'2021-08-02',2,7679),
+(13,'2022-08-02',3,1303),
+(14,'2022-08-02',1,5185),
+(15,'2022-08-22',2,2139);
+
+select count(*) from orders;
+-- To get the count number of sales by each customer
+select 
+count(case when cust_id=1 then order_id else null end) as "1",
+count(case when cust_id=2 then order_id else null end) as "2",
+count(case when cust_id=3 then order_id else null end) as "3"
+from orders;
+-- To get the count number of sales by each customer yearly basis
+select year(date),
+count(case when cust_id=1 then order_id else null end) as "1",
+count(case when cust_id=2 then order_id else null end) as "2",
+count(case when cust_id=3 then order_id else null end) as "3"
+from orders
+group by year(date);
